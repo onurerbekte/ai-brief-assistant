@@ -2,7 +2,7 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 import httpx2
 from fastapi.testclient import TestClient
-from openai import APITimeoutError,RateLimitError
+from openai import OpenAI,APITimeoutError,RateLimitError
 import pytest
 from app import create_app
 from service import BriefService
@@ -38,6 +38,20 @@ def test_mocked_responses_payload_and_output():
     args=fake.responses.create.call_args.kwargs
     assert args["store"] is False and args["max_output_tokens"]==1200
     assert args["input"]=="A fictional café website" and "English" in args["instructions"]
+
+
+def test_actual_sdk_with_offline_http_transport():
+    import json
+    captured=[]
+    def transport(request):
+        captured.append(json.loads(request.content))
+        assert request.url.path=="/v1/responses"
+        return httpx2.Response(200,json={"id":"resp_demo","object":"response","created_at":0,"model":"fictional-test-model","status":"completed","output":[{"id":"msg_demo","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"Offline SDK response","annotations":[]}]}]})
+    with httpx2.Client(transport=httpx2.MockTransport(transport)) as http_client:
+        with OpenAI(api_key="fictional-offline-test-key",http_client=http_client,max_retries=0) as sdk:
+            service=BriefService(mode="live",client=sdk,model="fictional-test-model")
+            assert service.generate("A fictional project brief","en")=="Offline SDK response"
+    assert captured[0]["store"] is False
 
 
 @pytest.mark.parametrize("kind,status",[("rate",503),("timeout",504),("empty",502)])
