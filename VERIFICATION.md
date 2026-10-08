@@ -1,8 +1,5 @@
 # Doğrulama / Verification
-`pytest`: **11 passed**. Demo TR/EN, statik dosyalar, giriş doğrulama, eksik canlı ayar, Responses parametreleri, boş yanıt, yoğunluk ve timeout test edildi / Tested bilingual demo, static assets, input validation, missing live config, Responses parameters, empty output, rate limits, and timeouts.
 
-Gerçek OpenAI SDK da HTTPX2 MockTransport ile çevrimdışı HTTP istek/yanıt akışında test edildi / The actual OpenAI SDK was also tested through an offline HTTPX2 MockTransport request/response flow.
+Mola sitesi Opera'da elle açılıp görsel olarak kontrol edildi. Telegram botu gerçek botla elle test edildi. Chrome eklentisi Opera'da elle test edildi. Docker projesi Docker Desktop ile çalıştırıldı; GET /health, GET /products ve POST /products elle denendi. OpenAI projesi anahtarsız demo modunda. Mobil cihaz testi yapıldı; yalnızca Android/iOS/web paketleri derlendi.
 
-JavaScript sözdizimi geçti / JavaScript syntax passed. Gerçek OpenAI API isteği, model erişimi, ücret ve tarayıcı görünümü doğrulanmadı / Live OpenAI requests, model access, billing, and rendered browser UI were not verified.
-
-Testlerdeki model adı ve token benzeri örnekler kurgusal sabitlerdir; gerçek kimlik bilgisi değildir / Test model names and token-like examples are fictional constants, not credentials.
+The Mola website was manually opened and visually checked in Opera. The Telegram bot was manually tested with a real bot. The Chrome extension was manually tested in Opera. The Docker project was run with Docker Desktop; GET /health, GET /products and POST /products were manually exercised. The OpenAI project is in key-free demo mode. Mobile device testing was performed; only Android/iOS/web bundles were built.
